@@ -95,8 +95,7 @@ class DDPG:
             target_param.data.copy_(param.data)
         for target_param, param in zip(self.target_actor.parameters(), self.actor.parameters()):
             target_param.data.copy_(param.data)
-        self.critic_optimizer = optim.Adam(
-            self.critic.parameters(), lr=cfg['critic_lr'])
+        self.critic_optimizer = optim.Adam(self.critic.parameters(), lr=cfg['critic_lr'])
         self.actor_optimizer = optim.Adam(self.actor.parameters(), lr=cfg['actor_lr'])
         self.memory = memories['memory']
         self.batch_size = cfg['batch_size']
@@ -275,7 +274,8 @@ def env_agent_config(cfg):
     n_states = env.observation_space.shape[0]
     n_actions = env.action_space.shape[0]
     cfg.update({"n_states": n_states, "n_actions": n_actions})  # 更新n_states和n_actions到cfg参数中
-    models = {"actor": Actor(n_states, n_actions, hidden_dim=cfg['actor_hidden_dim']), "critic": Critic(n_states, n_actions, hidden_dim=cfg['critic_hidden_dim'])}
+    models = {"actor": Actor(n_states, n_actions, hidden_dim=cfg['actor_hidden_dim']),
+              "critic": Critic(n_states, n_actions, hidden_dim=cfg['critic_hidden_dim'])}
     memories = {"memory": ReplayBuffer(cfg['memory_capacity'])}
     agent = DDPG(models, memories, cfg)
     return env, agent
@@ -289,8 +289,7 @@ def get_args():
     parser.add_argument('--env_name', default='Pendulum-v1', type=str, help="name of environment")
     parser.add_argument('--train_eps', default=300, type=int, help="episodes of training")
     parser.add_argument('--test_eps', default=20, type=int, help="episodes of testing")
-    # parser.add_argument('--max_steps', default=100000, type=int, help="steps per episode, much larger value can simulate infinite steps")
-    parser.add_argument('--max_steps', default=1000, type=int, help="steps per episode, much larger value can simulate infinite steps")
+    parser.add_argument('--max_steps', default=100000, type=int, help="steps per episode, much larger value can simulate infinite steps")
     parser.add_argument('--gamma', default=0.99, type=float, help="discounted factor")
     parser.add_argument('--critic_lr', default=1e-3, type=float, help="learning rate of critic")
     parser.add_argument('--actor_lr', default=1e-4, type=float, help="learning rate of actor")
@@ -342,6 +341,7 @@ def plot_rewards(rewards, cfg, path=None, tag='train'):
     plt.plot(rewards, label='rewards')
     plt.plot(smooth(rewards), label='smoothed')
     plt.legend()
+    plt.show()
 
 
 if __name__ == '__main__':
